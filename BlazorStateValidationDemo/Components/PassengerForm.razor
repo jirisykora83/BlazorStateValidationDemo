@@ -1,0 +1,112 @@
+﻿@using BlazorStateValidationDemo.Features.Booking
+@using FluentValidation.Results
+
+@inherits BlazorState.BlazorStateComponent
+
+<div class="p-4 bg-body mb-4 rounded">
+	<div class="text-white mb-1">
+		<span>@(PassengerIndex + 1). Passenger</span>
+		@if (!string.IsNullOrWhiteSpace(Passenger.Firstname) &&
+		   !string.IsNullOrWhiteSpace(Passenger.Lastname))
+		{
+			<span> (@Passenger.Firstname @Passenger.Lastname)</span>
+		}
+		else if (!string.IsNullOrWhiteSpace(Passenger.Firstname) ||
+				!string.IsNullOrWhiteSpace(Passenger.Lastname))
+		{
+			if (!string.IsNullOrWhiteSpace(Passenger.Firstname))
+			{
+				<span> (@Passenger.Firstname ...)</span>
+			}
+			else
+			{
+				<span> (... @Passenger.Lastname)</span>
+			}
+		}
+	</div>
+	<div>
+		<CustomTextInput Placeholder="First name"
+						Value="@Passenger.Firstname"
+						OnTextChange="OnFirstNameChangeCallback"
+						ValidationResult="@BookingState.GetValidation(
+							                  x => x.Passengers,
+							                  p => p.Firstname,
+							                  PassengerIndex)"/>
+	</div>
+	<div>
+		<CustomTextInput Placeholder="Last name"
+						Value="@Passenger.Lastname"
+						OnTextChange="OnLastNameChangeCallback"
+						ValidationResult="@BookingState.GetValidation(
+							                  x => x.Passengers,
+							                  p => p.Lastname,
+							                  PassengerIndex)"/>
+	</div>
+	<div>
+		<CustomTextInput Placeholder="Email"
+						Value="@Passenger.Email"
+						OnTextChange="OnEmailChangeCallback"
+						ValidationResult="@BookingState.GetValidation(
+							                  x => x.Passengers,
+							                  p => p.Email,
+							                  PassengerIndex)"/>
+	</div>
+
+	<div class="btn btn-warning"
+		@onclick="RemoveOnClickCallback">
+		REMOVE
+	</div>
+</div>
+
+@code
+{
+	private BookingState BookingState => GetState<BookingState>();
+	private Passenger Passenger => BookingState.Passengers[PassengerIndex];
+
+	[Parameter, EditorRequired]
+	public int PassengerIndex { get; set; }
+
+	private Task OnLastNameChangeCallback(string? value)
+	{
+		return Mediator.Send(new BookingState.SetPassengerAction
+		{
+			Index = PassengerIndex,
+			Passenger = Passenger with
+			{
+				Lastname = value,
+			},
+		});
+	}
+
+	private Task OnFirstNameChangeCallback(string? value)
+	{
+		return Mediator.Send(new BookingState.SetPassengerAction
+		{
+			Index = PassengerIndex,
+			Passenger = Passenger with
+			{
+				Firstname = value,
+			},
+		});
+	}
+
+	private Task OnEmailChangeCallback(string? value)
+	{
+		return Mediator.Send(new BookingState.SetPassengerAction
+		{
+			Index = PassengerIndex,
+			Passenger = Passenger with
+			{
+				Email = value,
+			},
+		});
+	}
+
+	private Task RemoveOnClickCallback()
+	{
+		return Mediator.Send(new BookingState.RemovePassengerAction
+		{
+			Index = PassengerIndex,
+		});
+	}
+}

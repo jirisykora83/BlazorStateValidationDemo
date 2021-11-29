@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor-State" Version="4.0.1" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Booking\AddPassenger\" />
+    <Folder Include="Features\Booking\SetTestData\" />
+    <Folder Include="Features\Booking\Validations\" />
+    <Folder Include="Features\Booking\SetPassenger\" />
+    <Folder Include="Features\Booking\RemovePassenger\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Behaviors\" />
+  </ItemGroup>
+
+</Project>

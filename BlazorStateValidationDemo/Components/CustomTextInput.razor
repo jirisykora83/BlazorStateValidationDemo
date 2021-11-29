@@ -1,0 +1,57 @@
+﻿@using FluentValidation.Results
+<div class="mb-2">
+	<input class="form-control"
+			type="text"
+			placeholder="@Placeholder"
+			value="@Value"
+			@oninput="OnInputCallback"
+			@onchange="OnChangeCallback"/>
+	@if (ValidationResult is not null &&
+		!ValidationResult.IsValid &&
+		ValidationResult.Errors.Count > 0)
+	{
+		@foreach (var error in ValidationResult.Errors)
+		{
+			<div class="alert alert-danger">
+				@error.ToString()
+			</div>
+		}
+	}
+</div>
+
+@code
+{
+	[Parameter]
+	public string? Value { get; set; }
+
+	[Parameter]
+	public string? Placeholder { get; set; }
+
+	[Parameter]
+	public EventCallback OnClick { get; set; }
+
+	[Parameter]
+	public ValidationResult? ValidationResult { get; set; }
+
+	/// <summary>
+	/// This is call intermediately after input value change.
+	/// </summary>
+	[Parameter]
+	public EventCallback<string?> OnTextChange { get; set; }
+
+	/// <summary>
+	/// This is call after input lose focus.
+	/// </summary>
+	[Parameter]
+	public EventCallback<string?> OnChange { get; set; }
+
+	private Task OnInputCallback(ChangeEventArgs x)
+	{
+		return OnTextChange.InvokeAsync(x.Value as string);
+	}
+
+	private Task OnChangeCallback(ChangeEventArgs x)
+	{
+		return OnChange.InvokeAsync(x.Value as string);
+	}
+}

@@ -1,0 +1,48 @@
+﻿@page "/"
+
+@using BlazorStateValidationDemo.Features.Booking
+@inherits BlazorState.BlazorStateComponent
+
+<PageTitle>Index</PageTitle>
+
+@for (int i = 0; i < BookingState.Passengers.Count; i++)
+{
+	<PassengerForm PassengerIndex="i" />
+}
+
+<div class="btn btn-info"
+	@onclick="AddPassengerOnClickCallback">
+	Add passenger
+</div>
+
+<h3 class="pt-2">Test other test field</h3>
+<div>
+	<CustomTextInput
+		Value="@BookingState.Data.Email"
+		Placeholder="Test data: email"
+		ValidationResult="@BookingState.GetValidation(x => x.Data.Email)"
+		OnTextChange="OnTestValueChangeCallback" />
+</div>
+
+@code
+{
+	BookingState BookingState => GetState<BookingState>();
+
+	private Task AddPassengerOnClickCallback()
+	{
+		return Mediator.Send(new BookingState.AddPassengerAction
+		{
+		});
+	}
+
+	private Task OnTestValueChangeCallback(string? value)
+	{
+		return Mediator.Send(new BookingState.SetTestDataAction()
+		{
+			Data = BookingState.Data with
+			{
+				Email = value,
+			},
+		});
+	}
+}
