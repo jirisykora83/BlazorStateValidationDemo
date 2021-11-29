@@ -17,7 +17,6 @@ jobs:
         - name: Fix base url
           run: |
               dotnet tool install --global Meziantou.Framework.Html.Tool 
-              meziantou.html replace-value --file index.html --xpath "//base/@href" --new-value "/BlazorStateValidationDemo"
               meziantou.html replace-value --file-pattern **/*.html --xpath "//base/@href" --new-value "/BlazorStateValidationDemo"
 
         # Generate the website
